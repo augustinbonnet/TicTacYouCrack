@@ -23,7 +23,6 @@ public class PlayerMovement : MonoBehaviour
     {
         if (col.gameObject.tag == ("Ground") && isGrounded == false)
         {
-            Debug.Log("Test");
             isGrounded = true;
         }
     }
@@ -43,7 +42,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (Input.GetKey("z"))
         {
-            rb.AddForce(new Vector3(-forwardForce * Time.deltaTime, 0, 0),ForceMode.Force);
+            rb.AddForce(new Vector3(-forwardForce * Time.deltaTime, 0, 0), ForceMode.Force);
         }
         if (Input.GetKey("q"))
         {
