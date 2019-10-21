@@ -12,11 +12,19 @@ public class PlayerMovement : MonoBehaviour
     public float forwardForce = 2000f;
     public float sideWayForce = 600f;
     public Transform RestartPoint;
+    public PlayerCaracteristics Player;
+
+    public int jumpNumber = 0;
+
+    private bool spacePressed = false;
+
+    public float distance = 5f;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
         jump = new Vector3(0.0f, 2.0f, 0.0f);
+	    Player = GetComponent<PlayerCaracteristics>();
     }
 
     void OnCollisionEnter(Collision col)
@@ -35,6 +43,7 @@ public class PlayerMovement : MonoBehaviour
             gameObject.transform.rotation = RestartPoint.rotation;
             rb.velocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
+            Player.Dies();
         }
     }
 
@@ -42,24 +51,35 @@ public class PlayerMovement : MonoBehaviour
     {
         if (Input.GetKey("z"))
         {
-            rb.AddForce(new Vector3(-forwardForce * Time.deltaTime, 0, 0), ForceMode.Force);
+            //rb.AddForce(new Vector3(-forwardForce * 1000 * Time.deltaTime, 0, 0), ForceMode.Force);
+            transform.position = transform.position + Camera.main.transform.forward * distance * Time.deltaTime;
         }
         if (Input.GetKey("q"))
         {
-            rb.AddForce(new Vector3(0, 0, -sideWayForce * Time.deltaTime));
+            rb.AddForce(new Vector3(0, 0, -sideWayForce * 1000 * Time.deltaTime));
         }
         if (Input.GetKey("s"))
         {
-            rb.AddForce(new Vector3(forwardForce * Time.deltaTime, 0));
+            rb.AddForce(new Vector3(forwardForce * 1000 * Time.deltaTime, 0));
         }
         if (Input.GetKey("d"))
         {
-            rb.AddForce(new Vector3(0, 0, sideWayForce * Time.deltaTime));
+            rb.AddForce(new Vector3(0, 0, sideWayForce * 1000 * Time.deltaTime));
         }
-        if (Input.GetKey("space") && isGrounded)
+        if (Input.GetKey("space") && isGrounded && !spacePressed)
         {
             rb.AddForce(jump * jumpForce, ForceMode.Impulse);
             isGrounded = false;
-        }        
+            jumpNumber++;
+            spacePressed = true;
+        }
+        else
+        if (Input.GetKey("space"))
+        {
+            spacePressed = true;
+        }else
+        {
+            spacePressed = false;
+        }
     }
 }
