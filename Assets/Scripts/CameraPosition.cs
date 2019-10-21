@@ -10,14 +10,14 @@ public class CameraPosition : MonoBehaviour
 
     private void Start()
     {
-
+        
     }
 
-    // Update is called once per frame
     void Update()
     {
+
         Vector3 TempVect = PlayerTransform.position + PositionOffset;
-        //TempVect.y = 3.22135f + PositionOffset.y;
         transform.position = TempVect;
+
     }
 }
