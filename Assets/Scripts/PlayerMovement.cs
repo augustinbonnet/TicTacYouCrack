@@ -13,22 +13,20 @@ public class PlayerMovement : MonoBehaviour
     public float jumpForce = 2f;
     public float forwardForce = 2000f;
     public float sideWayForce = 600f;
-    public Transform RestartPoint;
-    public PlayerCaracteristics Player;
     public Transform CameraTransform;
+    public GameController GC;
+
 
     public int jumpNumber = 0;
 
     private bool spacePressed = false;
 
-    public float distance = 5f;
-
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
         jump = new Vector3(0.0f, 2.0f, 0.0f);
-	    Player = GetComponent<PlayerCaracteristics>();
-        transform.position = RestartPoint.position;
+        GC.SpawnPlayer();
+        
     }
 
     void OnCollisionEnter(Collision col)
@@ -39,17 +37,10 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+
     private void Update()
     {
         Physics.gravity = new Vector3(0, Gravity * 10, 0);
-        if (transform.position.y <= -2)
-        {
-            gameObject.transform.position = RestartPoint.position;
-            gameObject.transform.rotation = RestartPoint.rotation;
-            rb.velocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
-            Player.Dies();
-        }
     }
 
     void FixedUpdate()
@@ -89,12 +80,6 @@ public class PlayerMovement : MonoBehaviour
         }else
         {
             spacePressed = false;
-        }
-        if (rb.velocity.magnitude > 9)
-        {
-            Debug.Log("Magnitude 1 : " + rb.velocity.magnitude);
-            rb.velocity.Normalize();
-            Debug.Log("Magnitude 2 : " + rb.velocity.magnitude);
         }
     }
 }
