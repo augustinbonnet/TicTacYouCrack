@@ -13,9 +13,12 @@ public class GameController : MonoBehaviour
     public Transform Lvl2TPPosition;
     public Transform Lvl3TPPosition;
     public Text UILevel;
-    public GameObject ThrowingBall;
-    private float Timer = 9999;
-    private int tmp = 0;
+    public GameObject VFXHitThrowingBall;
+    public GameObject VFXCheckPoint;
+    public PrepareLevel PrepLevel;
+    public float DeathTime = 1;
+
+    private bool PlayerIsDying = false;
 
     private void Start()
     {
@@ -26,24 +29,15 @@ public class GameController : MonoBehaviour
 
     private void Update()
     {
-        Timer -= Time.deltaTime;
-        if ((int)Timer % 1 == 0 && tmp != (int) Timer )
+        if (Player.transform.position.y <= -2 && !PlayerIsDying)
         {
-            Instantiate(ThrowingBall);
-            tmp = (int) Timer;
-        }
-        if (Player.transform.position.y <= -2)
-        {
-            Player.transform.position = PositionToTP.position;
-            Player.transform.rotation = PositionToTP.rotation;
-            Player.GetComponent<Rigidbody>().velocity = Vector3.zero;
-            Player.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
-            PlayerCaracs.Dies();
+            PlayerIsDying = true;
+            StartCoroutine(WaitForTwoSeconds());
         }
 
         if (Vector3.Distance(Player.transform.position, Lvl2TPPosition.position) < 4.5f && CurrrentLevel < 2)
         {
-            Debug.Log("CP 2");
+            PrepLevel.LevelUp();
             CurrrentLevel = 2;
             PositionToTP = Lvl2TPPosition;
             UILevel.text = CurrrentLevel.ToString();
@@ -61,5 +55,29 @@ public class GameController : MonoBehaviour
     public void SpawnPlayer()
     {
         Player.transform.position = FirstLevelPos.position;
+    }
+
+    public void PlayerDie()
+    {
+        Player.SetActive(true);
+        ResetPostion();
+    }
+
+    public void ResetPostion()
+    {
+        Player.transform.position = PositionToTP.position;
+        Player.transform.rotation = PositionToTP.rotation;
+        Player.GetComponent<Rigidbody>().velocity = Vector3.zero;
+        Player.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+        PlayerCaracs.Dies();
+    }
+
+    IEnumerator WaitForTwoSeconds()
+    {
+        Player.SetActive(false);
+        Instantiate(VFXHitThrowingBall).SetActive(true);
+        yield return new WaitForSeconds(DeathTime);
+        PlayerDie();
+        PlayerIsDying = false;
     }
 }

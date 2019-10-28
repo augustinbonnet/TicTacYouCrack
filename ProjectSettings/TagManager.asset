@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Ground
   - LevelCP
+  - ThrowingBall
   layers:
   - Default
   - TransparentFX

@@ -81,5 +81,15 @@ public class PlayerMovement : MonoBehaviour
         {
             spacePressed = false;
         }
+        if (Input.GetKeyDown("left shift"))
+        {
+            sideWayForce *= 1.5f;
+            forwardForce *= 1.5f;
+        }
+        if (Input.GetKeyUp("left shift"))
+        {
+            sideWayForce /= 1.5f;
+            forwardForce /= 1.5f;
+        }
     }
 }

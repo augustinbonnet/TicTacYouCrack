@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1952714605561256275
+--- !u!1 &5209262122509044723
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,48 +8,48 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1952714605561256281}
-  - component: {fileID: 1952714605561256278}
-  - component: {fileID: 1952714605561256279}
-  - component: {fileID: 1952714605561256276}
-  - component: {fileID: 1952714605561256277}
-  - component: {fileID: 1952714605561256274}
+  - component: {fileID: 4262776637860557965}
+  - component: {fileID: 5258571271607647050}
+  - component: {fileID: 2776858420608703749}
+  - component: {fileID: 9086545338954233205}
+  - component: {fileID: 3904054910453668276}
+  - component: {fileID: 1746181804766483446}
   m_Layer: 0
-  m_Name: ThrowingBall
-  m_TagString: Untagged
+  m_Name: ThrowingBall1
+  m_TagString: ThrowingBall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1952714605561256281
+--- !u!4 &4262776637860557965
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1952714605561256275}
+  m_GameObject: {fileID: 5209262122509044723}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 26.11, y: 0.41, z: -11.29}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1.2424, y: 1.2424, z: 1.2424}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &1952714605561256278
+--- !u!33 &5258571271607647050
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1952714605561256275}
+  m_GameObject: {fileID: 5209262122509044723}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &1952714605561256279
+--- !u!23 &2776858420608703749
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1952714605561256275}
+  m_GameObject: {fileID: 5209262122509044723}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -81,26 +81,26 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!135 &1952714605561256276
+--- !u!135 &9086545338954233205
 SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1952714605561256275}
+  m_GameObject: {fileID: 5209262122509044723}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!54 &1952714605561256277
+--- !u!54 &3904054910453668276
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1952714605561256275}
+  m_GameObject: {fileID: 5209262122509044723}
   serializedVersion: 2
   m_Mass: 500
   m_Drag: 0
@@ -110,19 +110,22 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &1952714605561256274
+--- !u!114 &1746181804766483446
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1952714605561256275}
+  m_GameObject: {fileID: 5209262122509044723}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 350b8cac2c322b441809e78d6ec4c24b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StartingPosition: {fileID: 0}
+  StartingPosition: {fileID: 6546932742317442985, guid: a09bcb9952ca2f341ae73bc9590f6038,
+    type: 3}
   Speed: 86.63
   Height: 159
   Gravity: -4000
+  LifeTime: 1.3
+  BallDirection: {x: 0, y: 510.4, z: 5000}
