@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class ApplyMovement : MonoBehaviour
 {
 
@@ -11,6 +12,7 @@ public class ApplyMovement : MonoBehaviour
     public float Gravity = -4000;
     public float LifeTime = 1.3f;
     public Vector3 BallDirection;
+    public GameObject VFXHitBall;
 
     // Start is called before the first frame update
     void Start()
@@ -19,6 +21,7 @@ public class ApplyMovement : MonoBehaviour
         transform.position = StartingPosition.position;
         Vector3 move = new Vector3(BallDirection.x, BallDirection.y * Height, BallDirection.z * Speed);
         gameObject.GetComponent<Rigidbody>().AddForce(Physics.gravity * gameObject.GetComponent<Rigidbody>().mass + move);
+        
     }
 
     // Update is called once per frame
@@ -36,7 +39,9 @@ public class ApplyMovement : MonoBehaviour
     {
         if (collision.gameObject.name == "Player")
         {
-            collision.gameObject.GetComponent<Rigidbody>().AddForce(new Vector3(BallDirection.x, BallDirection.y*4, BallDirection.z));
+            
+            collision.gameObject.GetComponent<Rigidbody>().AddForce(new Vector3(BallDirection.x, BallDirection.y*4, BallDirection.z/2));
+            Instantiate(VFXHitBall, transform);
         }
     }
 }

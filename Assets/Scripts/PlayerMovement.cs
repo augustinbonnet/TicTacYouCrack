@@ -15,10 +15,13 @@ public class PlayerMovement : MonoBehaviour
     public float sideWayForce = 600f;
     public Transform CameraTransform;
     public GameController GC;
+    public float SlowDownFactor = 5f;
+    public bool IsSlowingDown = false;
+    public float AccelerationFactor = 1.3f;
+    public bool IsAccelerated = false;
 
-
+    
     public int jumpNumber = 0;
-
     private bool spacePressed = false;
 
     private void Start()
@@ -81,15 +84,27 @@ public class PlayerMovement : MonoBehaviour
         {
             spacePressed = false;
         }
-        if (Input.GetKeyDown("left shift"))
+        if (Input.GetKey("left shift") && !IsAccelerated)
         {
-            sideWayForce *= 1.5f;
-            forwardForce *= 1.5f;
+            IsAccelerated = true;
+            sideWayForce *= AccelerationFactor;
+            forwardForce *= AccelerationFactor;
+        }else if (IsAccelerated)
+        {
+            sideWayForce /= AccelerationFactor;
+            forwardForce /= AccelerationFactor;
+            IsAccelerated = false;
         }
-        if (Input.GetKeyUp("left shift"))
+        if (Input.GetKey("q") && Input.GetKey("z") && !IsSlowingDown || Input.GetKey("d") && Input.GetKey("z") && !IsSlowingDown || Input.GetKey("q") && Input.GetKey("s") && !IsSlowingDown || Input.GetKey("d") && Input.GetKey("z") && !IsSlowingDown)
         {
-            sideWayForce /= 1.5f;
-            forwardForce /= 1.5f;
+            IsSlowingDown = true;
+            sideWayForce /= SlowDownFactor;
+            forwardForce /= SlowDownFactor;
+        }else if (IsSlowingDown)
+        {
+            IsSlowingDown = false;
+            forwardForce *= SlowDownFactor;
+            sideWayForce *= SlowDownFactor;
         }
     }
 }
