@@ -8,6 +8,7 @@ public class Level01 : MonoBehaviour
     public GameObject ThrowingBall1;
     public GameObject ThrowingBall2;
     public GameObject VFXCheckPoint;
+    public GameObject PlaformRotating;
     private float Timer = 9999;
     private int tmp = 0;
 
@@ -24,6 +25,7 @@ public class Level01 : MonoBehaviour
 
     public void Disable()
     {
+        PlaformRotating.GetComponent<Animator>().enabled = false; ;
         VFXCheckPoint.SetActive(false);
         Destroy(this);
     }

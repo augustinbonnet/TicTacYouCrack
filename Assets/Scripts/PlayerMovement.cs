@@ -20,7 +20,6 @@ public class PlayerMovement : MonoBehaviour
     public float AccelerationFactor = 1.3f;
     public bool IsAccelerated = false;
 
-    
     public int jumpNumber = 0;
     private bool spacePressed = false;
 
@@ -29,7 +28,6 @@ public class PlayerMovement : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         jump = new Vector3(0.0f, 2.0f, 0.0f);
         GC.SpawnPlayer();
-        
     }
 
     void OnCollisionEnter(Collision col)
@@ -105,6 +103,22 @@ public class PlayerMovement : MonoBehaviour
             IsSlowingDown = false;
             forwardForce *= SlowDownFactor;
             sideWayForce *= SlowDownFactor;
+        }
+        if (Input.GetKey("a"))
+        {
+            if (MovableObject.CurrentObjectSelected != null && MovableObject.CurrentObjectSelected.GetComponent<MovableObject>().Movable && MovableObject.CurrentObjectSelected.GetComponent<Rigidbody>().velocity.magnitude <12)
+            {
+                Vector3 PullMovement = new Vector3(transform.position.x - MovableObject.CurrentObjectSelected.transform.position.x, 0, transform.position.z - MovableObject.CurrentObjectSelected.transform.position.z).normalized * Time.deltaTime;
+                MovableObject.CurrentObjectSelected.GetComponent<Rigidbody>().AddForce(PullMovement * MovableObject.CurrentObjectSelected.GetComponent<MovableObject>().MagnetSpeed * 1000);
+            }
+        }
+        if (Input.GetKey("e"))
+        {
+            if (MovableObject.CurrentObjectSelected != null && MovableObject.CurrentObjectSelected.GetComponent<MovableObject>().Movable && MovableObject.CurrentObjectSelected.GetComponent<Rigidbody>().velocity.magnitude < 12)
+            {
+                Vector3 PushMovement = new Vector3(transform.position.x - MovableObject.CurrentObjectSelected.transform.position.x, 0, transform.position.z - MovableObject.CurrentObjectSelected.transform.position.z).normalized * Time.deltaTime;
+                MovableObject.CurrentObjectSelected.GetComponent<Rigidbody>().AddForce(-PushMovement * MovableObject.CurrentObjectSelected.GetComponent<MovableObject>().MagnetSpeed * 1000);
+            }
         }
     }
 }
