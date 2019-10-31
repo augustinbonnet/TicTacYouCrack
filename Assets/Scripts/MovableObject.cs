@@ -10,10 +10,11 @@ public class MovableObject : MonoBehaviour
     public Transform PlayerPosition;
     public bool Movable = false;
     public float MagnetSpeed = 10;
+    public bool ShouldDisapear = true;
 
     private void Update()
     {
-        if (gameObject.GetComponent<Rigidbody>().velocity.magnitude > 20)
+        if (gameObject.GetComponent<Rigidbody>().velocity.magnitude > 20 && ShouldDisapear)
         {
             Destroy(gameObject);
         }

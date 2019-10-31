@@ -11,6 +11,7 @@ public class PrepareLevel : MonoBehaviour
     public Level02 LVL2Script;
     public Level03 LVL3Script;
     public Level04 LVL4Script;
+    public Level05 LVL5Script;
 
     public AudioClip CheckPointSound;
     AudioSource audioSource;
@@ -18,10 +19,10 @@ public class PrepareLevel : MonoBehaviour
     private void Start()
     {
         audioSource = GetComponent<AudioSource>();
-        
+        /*
         LVL1Script.Disable();
-        LVL4Script.Enable();
-        Level = 4;
+        LVL5Script.Enable();
+        Level = 5;*/
     }
 
     public void LevelUp()
@@ -43,6 +44,11 @@ public class PrepareLevel : MonoBehaviour
         {
             LVL3Script.Disable();
             LVL4Script.Enable();
+        }
+        else if (Level == 4)
+        {
+            LVL4Script.Disable();
+            LVL5Script.Enable();
         }
         Level++;
     }

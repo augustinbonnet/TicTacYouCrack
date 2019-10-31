@@ -9,4 +9,9 @@ public class RestartScene : MonoBehaviour
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
+
+    public void RageQuit()
+    {
+        Application.Quit();
+    }
 }

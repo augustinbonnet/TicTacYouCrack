@@ -14,6 +14,7 @@ public class GameController : MonoBehaviour
     public Transform Lvl2TPPosition;
     public Transform Lvl3TPPosition;
     public Transform Lvl4TPPosition;
+    public Transform Lvl5TPPosition;
     public Text UILevel;
     public Text UITimer;
     public GameObject VFXHitThrowingBall;
@@ -34,10 +35,10 @@ public class GameController : MonoBehaviour
         UILevel.text = "1";
         audioSource = GetComponent<AudioSource>();
 
-        
-        CurrrentLevel = 4;
-        PositionToTP = Lvl4TPPosition;
-        UILevel.text = CurrrentLevel.ToString();
+        /*
+        CurrrentLevel = 1;
+        PositionToTP = Lvl5TPPosition;
+        UILevel.text = CurrrentLevel.ToString();*/
     }
 
     private void Update()
@@ -71,6 +72,13 @@ public class GameController : MonoBehaviour
             PrepLevel.LevelUp();
             CurrrentLevel = 4;
             PositionToTP = Lvl4TPPosition;
+            UILevel.text = CurrrentLevel.ToString();
+        }
+        if (Vector3.Distance(Player.transform.position, Lvl5TPPosition.position) < 3.5f && CurrrentLevel < 5)
+        {
+            PrepLevel.LevelUp();
+            CurrrentLevel = 5;
+            PositionToTP = Lvl5TPPosition;
             UILevel.text = CurrrentLevel.ToString();
         }
     }

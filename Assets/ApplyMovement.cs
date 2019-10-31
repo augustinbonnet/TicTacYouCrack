@@ -20,15 +20,14 @@ public class ApplyMovement : MonoBehaviour
         //gameObject.GetComponent<Rigidbody>().AddForce(new Vector3(0, 1000 * Height, 5000 * Speed));
         transform.position = StartingPosition.position;
         Vector3 move = new Vector3(BallDirection.x, BallDirection.y * Height, BallDirection.z * Speed);
-        gameObject.GetComponent<Rigidbody>().AddForce(Physics.gravity * gameObject.GetComponent<Rigidbody>().mass + move);
-        
+        gameObject.GetComponent<Rigidbody>().AddForce(Physics.gravity * gameObject.GetComponent<Rigidbody>().mass * Time.fixedDeltaTime + move);
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         LifeTime -= Time.deltaTime;
-        gameObject.GetComponent<Rigidbody>().AddForce(0, Gravity, 0);
+        gameObject.GetComponent<Rigidbody>().AddForce(0, Gravity * Time.fixedDeltaTime * 1000, 0);
         if (LifeTime <= 0)
         {
             Destroy(gameObject);
@@ -39,8 +38,7 @@ public class ApplyMovement : MonoBehaviour
     {
         if (collision.gameObject.name == "Player")
         {
-            
-            collision.gameObject.GetComponent<Rigidbody>().AddForce(new Vector3(BallDirection.x, BallDirection.y*4, BallDirection.z/2));
+            collision.gameObject.GetComponent<Rigidbody>().AddForce(new Vector3(BallDirection.x, BallDirection.y*4, BallDirection.z/2)*Time.deltaTime);
             Instantiate(VFXHitBall, transform);
         }
     }
