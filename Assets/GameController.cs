@@ -45,11 +45,10 @@ public class GameController : MonoBehaviour
     {
         Timer += Time.deltaTime;
         UITimer.text = ((int)Timer).ToString();
-        if (Player.transform.position.y <= -2.5 && !PlayerIsDying)
+        /*if (Player.transform.position.y <= -2.5 && !PlayerIsDying)
         {
-            PlayerIsDying = true;
-            StartCoroutine(WaitForTwoSeconds());
-        }
+            PlayerDie();
+        }*/
 
         if (Vector3.Distance(Player.transform.position, Lvl2TPPosition.position) < 4.5f && CurrrentLevel < 2)
         {
@@ -90,8 +89,8 @@ public class GameController : MonoBehaviour
 
     public void PlayerDie()
     {
-        Player.SetActive(true);
-        ResetPostion();
+        PlayerIsDying = true;
+        StartCoroutine(WaitForTwoSeconds());
     }
 
     public void ResetPostion()
@@ -112,7 +111,8 @@ public class GameController : MonoBehaviour
         Player.SetActive(false);
         Instantiate(VFXHitThrowingBall).SetActive(true);
         yield return new WaitForSeconds(DeathTime);
-        PlayerDie();
         PlayerIsDying = false;
+        Player.SetActive(true);
+        ResetPostion();
     }
 }

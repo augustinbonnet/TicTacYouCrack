@@ -23,25 +23,73 @@ public class PlayerMovement : MonoBehaviour
     public int jumpNumber = 0;
     private bool spacePressed = false;
 
+    public float Timer = 0;
+    public List<string> CollisionList;
+    public float Grav = 10f;
+    private Transform GOTemp;
+
     private void Start()
     {
+        CollisionList = new List<string>();
         rb = GetComponent<Rigidbody>();
         jump = new Vector3(0.0f, 2.0f, 0.0f);
         GC.SpawnPlayer();
+        GOTemp = transform.parent;
     }
 
     void OnCollisionEnter(Collision col)
     {
+        CollisionList.Add(col.gameObject.name);
+        Timer = 0;
         if (col.gameObject.tag == ("Ground") && isGrounded == false)
         {
             isGrounded = true;
+            
+        }
+        if(col.gameObject.name == "PlaneMoving")
+        {
+            gameObject.transform.SetParent(col.transform.parent);
+            
+            //transform.localScale = new Vector3(1, 1, 1);
+            //transform.position += col.gameObject.GetComponent<Rigidbody>().velocity;
+            //Debug.Log(col.gameObject.GetComponent<Rigidbody>().velocity);
         }
     }
 
+    private void OnCollisionStay(Collision collision)
+    {
+        if (collision.gameObject.name == "PlaneMoving")
+        {
+            //gameObject.GetComponent<Rigidbody>().MovePosition(collision.transform.position + transform.right * Time.fixedDeltaTime);
+        }
+        Timer = 0;
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        Timer = 0;
+        CollisionList.Remove(collision.gameObject.name);
+        if (collision.gameObject.name == "PlaneMoving")
+        {
+            gameObject.transform.SetParent(GOTemp);
+            //transform.localScale = new Vector3(1, 1, 1);
+        }
+    }
 
     private void Update()
     {
         Physics.gravity = new Vector3(0, Gravity * 10, 0);
+        Timer += Time.deltaTime;
+        if (Timer)
+        if (Timer > 1 && CollisionList.Count == 0)
+        {
+            GC.PlayerDie();
+            Timer = 0;
+        }
+        if (CollisionList.Contains("PlaneMoving"))
+        {
+            gameObject.GetComponent<Rigidbody>().AddForce(new Vector3(0f, -5000f * Time.deltaTime * Grav, 0f));
+        }
     }
 
     void FixedUpdate()
