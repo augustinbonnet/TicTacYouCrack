@@ -15,6 +15,7 @@ public class GameController : MonoBehaviour
     public Transform Lvl3TPPosition;
     public Transform Lvl4TPPosition;
     public Transform Lvl5TPPosition;
+    public Transform Lvl6TPPosition;
     public Text UILevel;
     public Text UITimer;
     public GameObject VFXHitThrowingBall;
@@ -23,10 +24,14 @@ public class GameController : MonoBehaviour
     public float DeathTime = 1;
     public float Timer = 0f;
 
-    private bool PlayerIsDying = false;
-
     public AudioClip impact;
     AudioSource audioSource;
+
+    public bool FinishedStage = false;
+    public GameObject VFXEndingStage;
+    public GameObject UIEndingStage;
+    public Text TextUIEndingStage;
+
 
     private void Start()
     {
@@ -35,21 +40,17 @@ public class GameController : MonoBehaviour
         UILevel.text = "1";
         audioSource = GetComponent<AudioSource>();
 
-        /*
-        CurrrentLevel = 1;
         PositionToTP = Lvl5TPPosition;
-        UILevel.text = CurrrentLevel.ToString();*/
+        CurrrentLevel = 5;
     }
 
     private void Update()
     {
-        Timer += Time.deltaTime;
-        UITimer.text = ((int)Timer).ToString();
-        /*if (Player.transform.position.y <= -2.5 && !PlayerIsDying)
+        if (!FinishedStage)
         {
-            PlayerDie();
-        }*/
-
+            Timer += Time.deltaTime;
+            UITimer.text = ((int)Timer).ToString();
+        }
         if (Vector3.Distance(Player.transform.position, Lvl2TPPosition.position) < 4.5f && CurrrentLevel < 2)
         {
             PrepLevel.LevelUp();
@@ -80,6 +81,13 @@ public class GameController : MonoBehaviour
             PositionToTP = Lvl5TPPosition;
             UILevel.text = CurrrentLevel.ToString();
         }
+        if (Vector3.Distance(Player.transform.position, Lvl6TPPosition.position) < 3.5f && CurrrentLevel < 6)
+        {
+            PrepLevel.LevelUp();
+            CurrrentLevel = 6;
+            PositionToTP = Lvl6TPPosition;
+            UILevel.text = CurrrentLevel.ToString();
+        }
     }
 
     public void SpawnPlayer()
@@ -89,7 +97,6 @@ public class GameController : MonoBehaviour
 
     public void PlayerDie()
     {
-        PlayerIsDying = true;
         StartCoroutine(WaitForTwoSeconds());
     }
 
@@ -111,8 +118,16 @@ public class GameController : MonoBehaviour
         Player.SetActive(false);
         Instantiate(VFXHitThrowingBall).SetActive(true);
         yield return new WaitForSeconds(DeathTime);
-        PlayerIsDying = false;
         Player.SetActive(true);
         ResetPostion();
+    }
+
+    public void FinishStage()
+    {
+        FinishedStage = true;
+        VFXEndingStage.SetActive(true);
+        TextUIEndingStage.text = "Congratulations, you finished the stage 1  in " + (int) Timer + " seconds and " + PlayerCaracs.lives + " lives !";
+        UIEndingStage.SetActive(true);
+        Player.transform.position = FirstLevelPos.position;
     }
 }

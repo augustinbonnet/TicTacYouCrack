@@ -9,6 +9,7 @@ TagManager:
   - ThrowingBall
   - FxTemporaire
   - MovableObject
+  - DeadSphere
   layers:
   - Default
   - TransparentFX

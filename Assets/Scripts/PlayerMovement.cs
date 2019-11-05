@@ -28,6 +28,8 @@ public class PlayerMovement : MonoBehaviour
     public float Grav = 10f;
     private Transform GOTemp;
 
+    public bool IsMagneted = false;    
+
     private void Start()
     {
         CollisionList = new List<string>();
@@ -44,24 +46,23 @@ public class PlayerMovement : MonoBehaviour
         if (col.gameObject.tag == ("Ground") && isGrounded == false)
         {
             isGrounded = true;
-            
         }
         if(col.gameObject.name == "PlaneMoving")
         {
             gameObject.transform.SetParent(col.transform.parent);
-            
-            //transform.localScale = new Vector3(1, 1, 1);
-            //transform.position += col.gameObject.GetComponent<Rigidbody>().velocity;
-            //Debug.Log(col.gameObject.GetComponent<Rigidbody>().velocity);
+        }
+        if (col.gameObject.tag == "DeadSphere" && !GC.FinishedStage)
+        {
+            GC.PlayerDie();
+        }
+        if (col.gameObject.name == "FinishedPlatform")
+        {
+            GC.FinishStage();
         }
     }
 
     private void OnCollisionStay(Collision collision)
     {
-        if (collision.gameObject.name == "PlaneMoving")
-        {
-            //gameObject.GetComponent<Rigidbody>().MovePosition(collision.transform.position + transform.right * Time.fixedDeltaTime);
-        }
         Timer = 0;
     }
 
@@ -72,7 +73,6 @@ public class PlayerMovement : MonoBehaviour
         if (collision.gameObject.name == "PlaneMoving")
         {
             gameObject.transform.SetParent(GOTemp);
-            //transform.localScale = new Vector3(1, 1, 1);
         }
     }
 
@@ -80,8 +80,7 @@ public class PlayerMovement : MonoBehaviour
     {
         Physics.gravity = new Vector3(0, Gravity * 10, 0);
         Timer += Time.deltaTime;
-        if (Timer)
-        if (Timer > 1 && CollisionList.Count == 0)
+        if (Timer > 1 && CollisionList.Count == 0 && !IsMagneted)
         {
             GC.PlayerDie();
             Timer = 0;
@@ -98,7 +97,6 @@ public class PlayerMovement : MonoBehaviour
         {
             Vector3 ForwardMovement = Vector3.Scale(Camera.main.transform.forward, new Vector3(1, 0, 1)).normalized * Time.deltaTime;
             rb.AddForce(ForwardMovement * forwardForce*1000, ForceMode.Force);
-            //transform.position = transform.position + Camera.main.transform.forward * distance * Time.deltaTime;
         }
         if (Input.GetKey("q"))
         {
@@ -115,7 +113,7 @@ public class PlayerMovement : MonoBehaviour
             Vector3 RightMovement = Vector3.Scale(Camera.main.transform.right, new Vector3(1, 0, 1)).normalized * Time.deltaTime;
             rb.AddForce(RightMovement * sideWayForce * 1000);
         }
-        if (Input.GetKey("space") && isGrounded && !spacePressed)
+        if (Input.GetKey("space") && isGrounded && !spacePressed && CollisionList.Count > 0)
         {
             rb.AddForce(jump * jumpForce, ForceMode.Impulse);
             isGrounded = false;
@@ -156,16 +154,14 @@ public class PlayerMovement : MonoBehaviour
         {
             if (MovableObject.CurrentObjectSelected != null && MovableObject.CurrentObjectSelected.GetComponent<MovableObject>().Movable && MovableObject.CurrentObjectSelected.GetComponent<Rigidbody>().velocity.magnitude <12)
             {
-                Vector3 PullMovement = new Vector3(transform.position.x - MovableObject.CurrentObjectSelected.transform.position.x, 0, transform.position.z - MovableObject.CurrentObjectSelected.transform.position.z).normalized * Time.deltaTime;
-                MovableObject.CurrentObjectSelected.GetComponent<Rigidbody>().AddForce(PullMovement * MovableObject.CurrentObjectSelected.GetComponent<MovableObject>().MagnetSpeed * 1000);
+                MovableObject.CurrentObjectSelected.GetComponent<MovableObject>().Pull(transform);
             }
         }
         if (Input.GetKey("e"))
         {
             if (MovableObject.CurrentObjectSelected != null && MovableObject.CurrentObjectSelected.GetComponent<MovableObject>().Movable && MovableObject.CurrentObjectSelected.GetComponent<Rigidbody>().velocity.magnitude < 12)
             {
-                Vector3 PushMovement = new Vector3(transform.position.x - MovableObject.CurrentObjectSelected.transform.position.x, 0, transform.position.z - MovableObject.CurrentObjectSelected.transform.position.z).normalized * Time.deltaTime;
-                MovableObject.CurrentObjectSelected.GetComponent<Rigidbody>().AddForce(-PushMovement * MovableObject.CurrentObjectSelected.GetComponent<MovableObject>().MagnetSpeed * 1000);
+                MovableObject.CurrentObjectSelected.GetComponent<MovableObject>().Push(transform);
             }
         }
     }

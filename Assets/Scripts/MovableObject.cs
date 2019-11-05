@@ -11,10 +11,30 @@ public class MovableObject : MonoBehaviour
     public bool Movable = false;
     public float MagnetSpeed = 10;
     public bool ShouldDisapear = true;
+    public bool Vertical = false;
+
+    private float Timer = 0.7f;
+    private bool StartTimer = false;
+    private bool IsTouchingPlayer = false;
 
     private void Update()
     {
-        if (gameObject.GetComponent<Rigidbody>().velocity.magnitude > 20 && ShouldDisapear)
+        if (StartTimer)
+        {
+            Timer -= Time.deltaTime;
+        }
+        if (Timer > 0 && Timer != 0.7f || IsTouchingPlayer)
+        {
+            Movable = false;
+        }
+        else
+        {
+            Movable = true;
+            StartTimer = false;
+            Timer = 0.7f;
+        }
+
+        if (gameObject.GetComponent<Rigidbody>().velocity.magnitude > 25 && ShouldDisapear)
         {
             Destroy(gameObject);
         }
@@ -31,8 +51,67 @@ public class MovableObject : MonoBehaviour
             }
             gameObject.GetComponent<Renderer>().material = SelectedMaterial;
             CurrentObjectSelected = gameObject;
-            Movable = true;
+            IsTouchingPlayer = true;
         }
     }
 
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.tag == "Player")
+        {
+            StartTimer = true;
+            IsTouchingPlayer = false;
+        }
+    }
+
+    public void Pull(Transform PlayerTransform)
+    {
+        if (!CurrentObjectSelected.GetComponent<MovableObject>().Vertical)
+        {
+            PullTowardsPlayer(PlayerTransform);
+        }
+        else
+        {
+            PullDown();
+        }
+    }
+
+    public void Push(Transform PlayerTransform)
+    {
+        if (!CurrentObjectSelected.GetComponent<MovableObject>().Vertical)
+        {
+            PushFromPlayer(PlayerTransform);
+        }
+        else
+        {
+            PullUp();
+        }
+    }
+
+    private void PullTowardsPlayer(Transform PlayerTransform)
+    {
+        Vector3 PullMovement = new Vector3(PlayerTransform.position.x - gameObject.transform.position.x, 0, PlayerTransform.position.z - gameObject.transform.position.z).normalized * Time.deltaTime;
+        gameObject.GetComponent<Rigidbody>().AddForce(PullMovement * MagnetSpeed * 1000);
+    }
+
+    private void PushFromPlayer(Transform PlayerTransform)
+    {
+        Vector3 PushMovement = new Vector3(PlayerTransform.position.x - transform.position.x, 0, PlayerTransform.position.z - transform.position.z).normalized * Time.deltaTime;
+        gameObject.GetComponent<Rigidbody>().AddForce(-PushMovement * MagnetSpeed * 1000);
+    }
+
+    public void PullUp()
+    {
+        if (transform.parent.position.y < 21f && Movable)
+        {
+            transform.parent.position += new Vector3(0f, 4f, 0f) * Time.fixedDeltaTime;
+        }
+    }
+    public void PullDown()
+    {
+        if (transform.parent.position.y > 16f && Movable)
+        {
+            transform.parent.position += new Vector3(0f, -4f, 0f) * Time.fixedDeltaTime;
+        }
+    }
 }
