@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class MoveOnlySomewhere : MonoBehaviour
 {
-    public float ComeBackForce = 3000;
+    public float ComeBackForce = 2000;
 
     void Update()
     {
-        if (transform.position.z > -34.2)
+        if (transform.position.z > -34.2f)
         {
-            gameObject.GetComponent<Rigidbody>().AddForce(-new Vector3(0, 0, ComeBackForce) * Time.deltaTime);
+            transform.parent.GetComponent<Rigidbody>().AddForce(-new Vector3(0, 0, ComeBackForce) * Time.deltaTime);
         }
     }
 }

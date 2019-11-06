@@ -32,6 +32,9 @@ public class GameController : MonoBehaviour
     public GameObject UIEndingStage;
     public Text TextUIEndingStage;
 
+    private bool FreezePosition = false;
+    private bool PlayerIsDying = false;
+
 
     private void Start()
     {
@@ -40,12 +43,20 @@ public class GameController : MonoBehaviour
         UILevel.text = "1";
         audioSource = GetComponent<AudioSource>();
 
+        
         PositionToTP = Lvl5TPPosition;
         CurrrentLevel = 5;
     }
 
     private void Update()
     {
+        if (FreezePosition)
+        {
+            Player.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            Player.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+            Player.GetComponent<Rigidbody>().useGravity = false;
+        }
+
         if (!FinishedStage)
         {
             Timer += Time.deltaTime;
@@ -97,7 +108,8 @@ public class GameController : MonoBehaviour
 
     public void PlayerDie()
     {
-        StartCoroutine(WaitForTwoSeconds());
+        if (!PlayerIsDying)
+            StartCoroutine(WaitForTwoSeconds());
     }
 
     public void ResetPostion()
@@ -111,15 +123,21 @@ public class GameController : MonoBehaviour
 
     IEnumerator WaitForTwoSeconds()
     {
+        PlayerIsDying = true;
         if (!audioSource.isPlaying)
         {
             audioSource.Play();
         }
-        Player.SetActive(false);
+        Player.GetComponent<MeshRenderer>().enabled = false;
+        FreezePosition = true;
+
         Instantiate(VFXHitThrowingBall).SetActive(true);
         yield return new WaitForSeconds(DeathTime);
-        Player.SetActive(true);
         ResetPostion();
+        FreezePosition = false;
+        Player.GetComponent<Rigidbody>().useGravity = true;
+        Player.GetComponent<MeshRenderer>().enabled = true;
+        PlayerIsDying = false;
     }
 
     public void FinishStage()

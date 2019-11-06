@@ -51,6 +51,10 @@ public class PlayerMovement : MonoBehaviour
         {
             gameObject.transform.SetParent(col.transform.parent);
         }
+        if (col.gameObject.name == "Rock")
+        {
+            gameObject.transform.SetParent(col.transform.parent.parent);
+        }
         if (col.gameObject.tag == "DeadSphere" && !GC.FinishedStage)
         {
             GC.PlayerDie();
@@ -70,7 +74,7 @@ public class PlayerMovement : MonoBehaviour
     {
         Timer = 0;
         CollisionList.Remove(collision.gameObject.name);
-        if (collision.gameObject.name == "PlaneMoving")
+        if (collision.gameObject.name == "PlaneMoving" || collision.gameObject.name == "Rock")
         {
             gameObject.transform.SetParent(GOTemp);
         }

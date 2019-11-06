@@ -16,6 +16,7 @@ public class MovableObject : MonoBehaviour
     private float Timer = 0.7f;
     private bool StartTimer = false;
     private bool IsTouchingPlayer = false;
+    public bool HasAGroundOnTop = false;
 
     private void Update()
     {
@@ -90,14 +91,32 @@ public class MovableObject : MonoBehaviour
 
     private void PullTowardsPlayer(Transform PlayerTransform)
     {
-        Vector3 PullMovement = new Vector3(PlayerTransform.position.x - gameObject.transform.position.x, 0, PlayerTransform.position.z - gameObject.transform.position.z).normalized * Time.deltaTime;
-        gameObject.GetComponent<Rigidbody>().AddForce(PullMovement * MagnetSpeed * 1000);
+        if (!HasAGroundOnTop)
+        {
+            Vector3 PullMovement = new Vector3(PlayerTransform.position.x - gameObject.transform.position.x, 0, PlayerTransform.position.z - gameObject.transform.position.z).normalized * Time.deltaTime;
+            gameObject.GetComponent<Rigidbody>().AddForce(PullMovement * MagnetSpeed * 1000);
+        }
+        else
+        {
+            Vector3 PullMovement = new Vector3(PlayerTransform.position.x - gameObject.transform.position.x, 0, PlayerTransform.position.z - gameObject.transform.position.z).normalized * Time.deltaTime;
+            transform.parent.GetComponent<Rigidbody>().AddForce(PullMovement * MagnetSpeed * 1000);
+        }
+        
     }
 
     private void PushFromPlayer(Transform PlayerTransform)
     {
-        Vector3 PushMovement = new Vector3(PlayerTransform.position.x - transform.position.x, 0, PlayerTransform.position.z - transform.position.z).normalized * Time.deltaTime;
-        gameObject.GetComponent<Rigidbody>().AddForce(-PushMovement * MagnetSpeed * 1000);
+        if (!HasAGroundOnTop)
+        {
+            Vector3 PushMovement = new Vector3(PlayerTransform.position.x - transform.position.x, 0, PlayerTransform.position.z - transform.position.z).normalized * Time.deltaTime;
+            gameObject.GetComponent<Rigidbody>().AddForce(-PushMovement * MagnetSpeed * 1000);
+        }
+        else
+        {
+            Vector3 PullMovement = new Vector3(PlayerTransform.position.x - gameObject.transform.position.x, 0, PlayerTransform.position.z - gameObject.transform.position.z).normalized * Time.deltaTime;
+            transform.parent.GetComponent<Rigidbody>().AddForce(PullMovement * MagnetSpeed * 1000);
+        }
+            
     }
 
     public void PullUp()

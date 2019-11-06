@@ -21,6 +21,7 @@ public class PrepareLevel : MonoBehaviour
     {
         audioSource = GetComponent<AudioSource>();
         
+        
         LVL1Script.Disable();
         LVL5Script.Enable();
         Level = 5;
