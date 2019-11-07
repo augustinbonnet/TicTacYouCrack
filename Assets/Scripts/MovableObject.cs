@@ -35,10 +35,22 @@ public class MovableObject : MonoBehaviour
             Timer = 0.7f;
         }
 
-        if (gameObject.GetComponent<Rigidbody>().velocity.magnitude > 25 && ShouldDisapear)
+        if (!HasAGroundOnTop)
         {
-            Destroy(gameObject);
+            if (gameObject.GetComponent<Rigidbody>().velocity.magnitude > 25 && ShouldDisapear)
+            {
+                Destroy(gameObject);
+            }
         }
+        else
+        {
+            if (transform.parent.GetComponent<Rigidbody>().velocity.magnitude > 25 && ShouldDisapear)
+            {
+                Destroy(gameObject);
+            }
+        }
+        
+
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -99,9 +111,8 @@ public class MovableObject : MonoBehaviour
         else
         {
             Vector3 PullMovement = new Vector3(PlayerTransform.position.x - gameObject.transform.position.x, 0, PlayerTransform.position.z - gameObject.transform.position.z).normalized * Time.deltaTime;
-            transform.parent.GetComponent<Rigidbody>().AddForce(PullMovement * MagnetSpeed * 1000);
+            transform.parent.position += PullMovement * MagnetSpeed * 0.01f;
         }
-        
     }
 
     private void PushFromPlayer(Transform PlayerTransform)
@@ -114,7 +125,7 @@ public class MovableObject : MonoBehaviour
         else
         {
             Vector3 PullMovement = new Vector3(PlayerTransform.position.x - gameObject.transform.position.x, 0, PlayerTransform.position.z - gameObject.transform.position.z).normalized * Time.deltaTime;
-            transform.parent.GetComponent<Rigidbody>().AddForce(PullMovement * MagnetSpeed * 1000);
+            transform.parent.position -= PullMovement * MagnetSpeed * 0.01f;
         }
             
     }

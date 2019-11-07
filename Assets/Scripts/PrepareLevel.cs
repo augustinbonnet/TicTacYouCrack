@@ -6,7 +6,8 @@ using UnityEngine;
 public class PrepareLevel : MonoBehaviour
 {
 
-    public int Level = 1;
+    public int Level = 0;
+    public Level00 LVL0Script;
     public Level01 LVL1Script;
     public Level02 LVL2Script;
     public Level03 LVL3Script;
@@ -14,17 +15,17 @@ public class PrepareLevel : MonoBehaviour
     public Level05 LVL5Script;
     public Level06 LVL6Script;
 
-    public AudioClip CheckPointSound;
     AudioSource audioSource;
 
     private void Start()
     {
         audioSource = GetComponent<AudioSource>();
-        
-        
+
+        LVL0Script.Enable();
+        /*
         LVL1Script.Disable();
         LVL5Script.Enable();
-        Level = 5;
+        Level = 5;*/
     }
 
     public void LevelUp()
@@ -33,7 +34,11 @@ public class PrepareLevel : MonoBehaviour
         {
             audioSource.Play();
         }
-        if (Level == 1)
+        if (Level == 0)
+        {
+            LVL0Script.Disable();
+            LVL1Script.Enable();
+        }else if (Level == 1)
         {
             LVL1Script.Disable();
             LVL2Script.Enable();

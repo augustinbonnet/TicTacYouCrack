@@ -8,9 +8,9 @@ public class MoveOnlySomewhere : MonoBehaviour
 
     void Update()
     {
-        if (transform.position.z > -34.2f)
+        if (transform.position.z > -34f)
         {
-            transform.parent.GetComponent<Rigidbody>().AddForce(-new Vector3(0, 0, ComeBackForce) * Time.deltaTime);
+            transform.position = new Vector3(transform.position.x , transform.position.y,- 34);
         }
     }
 }

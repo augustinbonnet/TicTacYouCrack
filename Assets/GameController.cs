@@ -10,7 +10,8 @@ public class GameController : MonoBehaviour
     public PlayerCaracteristics PlayerCaracs;
     public Transform FirstLevelPos;
     public Transform PositionToTP;
-    public int CurrrentLevel = 1;
+    public int CurrrentLevel = 0;
+    public Transform Lvl1TPPosition;
     public Transform Lvl2TPPosition;
     public Transform Lvl3TPPosition;
     public Transform Lvl4TPPosition;
@@ -34,18 +35,24 @@ public class GameController : MonoBehaviour
 
     private bool FreezePosition = false;
     private bool PlayerIsDying = false;
+    public GameObject FirstVFX;
+    private bool PlayerIsSpawned = false;
+
+    //public GameObject 
 
 
     private void Start()
     {
         PositionToTP = FirstLevelPos;
         PlayerCaracs = Player.GetComponent<PlayerCaracteristics>();
-        UILevel.text = "1";
+        UILevel.text = "0";
         audioSource = GetComponent<AudioSource>();
 
-        
+        //GC.SpawnPlayer();
+
+        /*
         PositionToTP = Lvl5TPPosition;
-        CurrrentLevel = 5;
+        CurrrentLevel = 5;*/
     }
 
     private void Update()
@@ -61,6 +68,13 @@ public class GameController : MonoBehaviour
         {
             Timer += Time.deltaTime;
             UITimer.text = ((int)Timer).ToString();
+        }
+        if (Vector3.Distance(Player.transform.position, Lvl1TPPosition.position) < 4.5f && CurrrentLevel < 1 && PlayerIsSpawned)
+        {
+            PrepLevel.LevelUp();
+            CurrrentLevel = 1;
+            PositionToTP = Lvl1TPPosition;
+            UILevel.text = CurrrentLevel.ToString();
         }
         if (Vector3.Distance(Player.transform.position, Lvl2TPPosition.position) < 4.5f && CurrrentLevel < 2)
         {
@@ -103,7 +117,10 @@ public class GameController : MonoBehaviour
 
     public void SpawnPlayer()
     {
+        PlayerIsSpawned = true;
+        FirstVFX.SetActive(true);
         Player.transform.position = FirstLevelPos.position;
+        Player.GetComponent<PlayerMovement>().CanMove = true;
     }
 
     public void PlayerDie()

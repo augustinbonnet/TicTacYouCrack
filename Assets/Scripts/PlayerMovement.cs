@@ -8,6 +8,7 @@ public class PlayerMovement : MonoBehaviour
 
     public float Gravity = -15f;
 
+    public bool CanMove = false;
     private bool isGrounded;
     private Vector3 jump;
     public float jumpForce = 2f;
@@ -35,7 +36,6 @@ public class PlayerMovement : MonoBehaviour
         CollisionList = new List<string>();
         rb = GetComponent<Rigidbody>();
         jump = new Vector3(0.0f, 2.0f, 0.0f);
-        GC.SpawnPlayer();
         GOTemp = transform.parent;
     }
 
@@ -97,75 +97,81 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (Input.GetKey("z"))
+        if (CanMove)
         {
-            Vector3 ForwardMovement = Vector3.Scale(Camera.main.transform.forward, new Vector3(1, 0, 1)).normalized * Time.deltaTime;
-            rb.AddForce(ForwardMovement * forwardForce*1000, ForceMode.Force);
-        }
-        if (Input.GetKey("q"))
-        {
-            Vector3 LeftMovement = Vector3.Scale(-Camera.main.transform.right, new Vector3(1, 0, 1)).normalized * Time.deltaTime;
-            rb.AddForce(LeftMovement * sideWayForce * 1000);
-        }
-        if (Input.GetKey("s"))
-        {
-            Vector3 Backwardmovement = Vector3.Scale(-Camera.main.transform.forward, new Vector3(1, 0, 1)).normalized * Time.deltaTime;
-            rb.AddForce(Backwardmovement * forwardForce * 1000);
-        }
-        if (Input.GetKey("d"))
-        {
-            Vector3 RightMovement = Vector3.Scale(Camera.main.transform.right, new Vector3(1, 0, 1)).normalized * Time.deltaTime;
-            rb.AddForce(RightMovement * sideWayForce * 1000);
-        }
-        if (Input.GetKey("space") && isGrounded && !spacePressed && CollisionList.Count > 0)
-        {
-            rb.AddForce(jump * jumpForce, ForceMode.Impulse);
-            isGrounded = false;
-            jumpNumber++;
-            spacePressed = true;
-        }
-        else
-        if (Input.GetKey("space"))
-        {
-            spacePressed = true;
-        }else
-        {
-            spacePressed = false;
-        }
-        if (Input.GetKey("left shift") && !IsAccelerated)
-        {
-            IsAccelerated = true;
-            sideWayForce *= AccelerationFactor;
-            forwardForce *= AccelerationFactor;
-        }else if (IsAccelerated)
-        {
-            sideWayForce /= AccelerationFactor;
-            forwardForce /= AccelerationFactor;
-            IsAccelerated = false;
-        }
-        if (Input.GetKey("q") && Input.GetKey("z") && !IsSlowingDown || Input.GetKey("d") && Input.GetKey("z") && !IsSlowingDown || Input.GetKey("q") && Input.GetKey("s") && !IsSlowingDown || Input.GetKey("d") && Input.GetKey("z") && !IsSlowingDown)
-        {
-            IsSlowingDown = true;
-            sideWayForce /= SlowDownFactor;
-            forwardForce /= SlowDownFactor;
-        }else if (IsSlowingDown)
-        {
-            IsSlowingDown = false;
-            forwardForce *= SlowDownFactor;
-            sideWayForce *= SlowDownFactor;
-        }
-        if (Input.GetKey("a"))
-        {
-            if (MovableObject.CurrentObjectSelected != null && MovableObject.CurrentObjectSelected.GetComponent<MovableObject>().Movable && MovableObject.CurrentObjectSelected.GetComponent<Rigidbody>().velocity.magnitude <12)
+            if (Input.GetKey("z"))
             {
-                MovableObject.CurrentObjectSelected.GetComponent<MovableObject>().Pull(transform);
+                Vector3 ForwardMovement = Vector3.Scale(Camera.main.transform.forward, new Vector3(1, 0, 1)).normalized * Time.deltaTime;
+                rb.AddForce(ForwardMovement * forwardForce * 1000, ForceMode.Force);
             }
-        }
-        if (Input.GetKey("e"))
-        {
-            if (MovableObject.CurrentObjectSelected != null && MovableObject.CurrentObjectSelected.GetComponent<MovableObject>().Movable && MovableObject.CurrentObjectSelected.GetComponent<Rigidbody>().velocity.magnitude < 12)
+            if (Input.GetKey("q"))
             {
-                MovableObject.CurrentObjectSelected.GetComponent<MovableObject>().Push(transform);
+                Vector3 LeftMovement = Vector3.Scale(-Camera.main.transform.right, new Vector3(1, 0, 1)).normalized * Time.deltaTime;
+                rb.AddForce(LeftMovement * sideWayForce * 1000);
+            }
+            if (Input.GetKey("s"))
+            {
+                Vector3 Backwardmovement = Vector3.Scale(-Camera.main.transform.forward, new Vector3(1, 0, 1)).normalized * Time.deltaTime;
+                rb.AddForce(Backwardmovement * forwardForce * 1000);
+            }
+            if (Input.GetKey("d"))
+            {
+                Vector3 RightMovement = Vector3.Scale(Camera.main.transform.right, new Vector3(1, 0, 1)).normalized * Time.deltaTime;
+                rb.AddForce(RightMovement * sideWayForce * 1000);
+            }
+            if (Input.GetKey("space") && isGrounded && !spacePressed && CollisionList.Count > 0)
+            {
+                rb.AddForce(jump * jumpForce, ForceMode.Impulse);
+                isGrounded = false;
+                jumpNumber++;
+                spacePressed = true;
+            }
+            else
+            if (Input.GetKey("space"))
+            {
+                spacePressed = true;
+            }
+            else
+            {
+                spacePressed = false;
+            }
+            if (Input.GetKey("left shift") && !IsAccelerated)
+            {
+                IsAccelerated = true;
+                sideWayForce *= AccelerationFactor;
+                forwardForce *= AccelerationFactor;
+            }
+            else if (IsAccelerated)
+            {
+                sideWayForce /= AccelerationFactor;
+                forwardForce /= AccelerationFactor;
+                IsAccelerated = false;
+            }
+            if (Input.GetKey("q") && Input.GetKey("z") && !IsSlowingDown || Input.GetKey("d") && Input.GetKey("z") && !IsSlowingDown || Input.GetKey("q") && Input.GetKey("s") && !IsSlowingDown || Input.GetKey("d") && Input.GetKey("z") && !IsSlowingDown)
+            {
+                IsSlowingDown = true;
+                sideWayForce /= SlowDownFactor;
+                forwardForce /= SlowDownFactor;
+            }
+            else if (IsSlowingDown)
+            {
+                IsSlowingDown = false;
+                forwardForce *= SlowDownFactor;
+                sideWayForce *= SlowDownFactor;
+            }
+            if (Input.GetKey("a"))
+            {
+                if (MovableObject.CurrentObjectSelected != null && MovableObject.CurrentObjectSelected.GetComponent<MovableObject>().Movable && MovableObject.CurrentObjectSelected.GetComponent<Rigidbody>().velocity.magnitude < 12)
+                {
+                    MovableObject.CurrentObjectSelected.GetComponent<MovableObject>().Pull(transform);
+                }
+            }
+            if (Input.GetKey("e"))
+            {
+                if (MovableObject.CurrentObjectSelected != null && MovableObject.CurrentObjectSelected.GetComponent<MovableObject>().Movable && MovableObject.CurrentObjectSelected.GetComponent<Rigidbody>().velocity.magnitude < 12)
+                {
+                    MovableObject.CurrentObjectSelected.GetComponent<MovableObject>().Push(transform);
+                }
             }
         }
     }
