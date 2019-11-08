@@ -13,6 +13,7 @@ public class ApplyMovement : MonoBehaviour
     public float LifeTime = 1.3f;
     public Vector3 BallDirection;
     public GameObject VFXHitBall;
+    public float Power = 1;
 
     // Start is called before the first frame update
     void Start()
@@ -36,9 +37,10 @@ public class ApplyMovement : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.name == "Player")
+        if (collision.gameObject.tag == "Player")
         {
-            collision.gameObject.GetComponent<Rigidbody>().AddForce(new Vector3(BallDirection.x, BallDirection.y*4, BallDirection.z/2)*Time.deltaTime);
+            gameObject.GetComponent<AudioSource>().Play();
+            collision.gameObject.GetComponent<Rigidbody>().AddForce(new Vector3(BallDirection.x, BallDirection.y*10, BallDirection.z)*Time.deltaTime * Power);
             Instantiate(VFXHitBall, transform);
         }
     }

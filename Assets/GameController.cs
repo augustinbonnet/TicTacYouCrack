@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -28,7 +29,7 @@ public class GameController : MonoBehaviour
     public AudioClip impact;
     AudioSource audioSource;
 
-    public bool FinishedStage = false;
+    public bool FinishedStage = true;
     public GameObject VFXEndingStage;
     public GameObject UIEndingStage;
     public Text TextUIEndingStage;
@@ -38,7 +39,8 @@ public class GameController : MonoBehaviour
     public GameObject FirstVFX;
     private bool PlayerIsSpawned = false;
 
-    //public GameObject 
+    public bool SkipIntro = false;
+    public GameObject IntroGO;
 
 
     private void Start()
@@ -47,6 +49,14 @@ public class GameController : MonoBehaviour
         PlayerCaracs = Player.GetComponent<PlayerCaracteristics>();
         UILevel.text = "0";
         audioSource = GetComponent<AudioSource>();
+        if (SkipIntro)
+        {
+            SpawnPlayer();
+        }
+        else
+        {
+            IntroGO.SetActive(true);
+        }
 
         //GC.SpawnPlayer();
 
@@ -67,7 +77,8 @@ public class GameController : MonoBehaviour
         if (!FinishedStage)
         {
             Timer += Time.deltaTime;
-            UITimer.text = ((int)Timer).ToString();
+            TimeSpan time = new TimeSpan(0, 0, (int)Timer);
+            UITimer.text = time.ToString();
         }
         if (Vector3.Distance(Player.transform.position, Lvl1TPPosition.position) < 4.5f && CurrrentLevel < 1 && PlayerIsSpawned)
         {
@@ -121,6 +132,7 @@ public class GameController : MonoBehaviour
         FirstVFX.SetActive(true);
         Player.transform.position = FirstLevelPos.position;
         Player.GetComponent<PlayerMovement>().CanMove = true;
+        FinishedStage = false;
     }
 
     public void PlayerDie()
@@ -147,7 +159,7 @@ public class GameController : MonoBehaviour
         }
         Player.GetComponent<MeshRenderer>().enabled = false;
         FreezePosition = true;
-
+        Player.GetComponent<PlayerMovement>().CanMove = false;
         Instantiate(VFXHitThrowingBall).SetActive(true);
         yield return new WaitForSeconds(DeathTime);
         ResetPostion();
@@ -155,13 +167,14 @@ public class GameController : MonoBehaviour
         Player.GetComponent<Rigidbody>().useGravity = true;
         Player.GetComponent<MeshRenderer>().enabled = true;
         PlayerIsDying = false;
+        Player.GetComponent<PlayerMovement>().CanMove = true;
     }
 
     public void FinishStage()
     {
         FinishedStage = true;
         VFXEndingStage.SetActive(true);
-        TextUIEndingStage.text = "Congratulations, you finished the stage 1  in " + (int) Timer + " seconds and " + PlayerCaracs.lives + " lives !";
+        TextUIEndingStage.text = "Congratulations, you finished the stage 1 in " + (int)TimeSpan.FromSeconds((int)Timer).TotalMinutes + " minutes, " + TimeSpan.FromSeconds((int)Timer).Seconds + " seconds and " + PlayerCaracs.lives + " lives !";
         UIEndingStage.SetActive(true);
         Player.transform.position = FirstLevelPos.position;
     }

@@ -62,6 +62,7 @@ public class PlayerMovement : MonoBehaviour
         if (col.gameObject.name == "FinishedPlatform")
         {
             GC.FinishStage();
+            col.gameObject.GetComponent<AudioSource>().Play();
         }
     }
 

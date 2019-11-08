@@ -44,7 +44,7 @@ public class MovableObject : MonoBehaviour
         }
         else
         {
-            if (transform.parent.GetComponent<Rigidbody>().velocity.magnitude > 25 && ShouldDisapear)
+            if (transform.GetComponent<Rigidbody>().velocity.magnitude > 25 && ShouldDisapear)
             {
                 Destroy(gameObject);
             }
@@ -111,7 +111,7 @@ public class MovableObject : MonoBehaviour
         else
         {
             Vector3 PullMovement = new Vector3(PlayerTransform.position.x - gameObject.transform.position.x, 0, PlayerTransform.position.z - gameObject.transform.position.z).normalized * Time.deltaTime;
-            transform.parent.position += PullMovement * MagnetSpeed * 0.01f;
+            transform.position += PullMovement * MagnetSpeed * 0.01f;
         }
     }
 
@@ -125,7 +125,7 @@ public class MovableObject : MonoBehaviour
         else
         {
             Vector3 PullMovement = new Vector3(PlayerTransform.position.x - gameObject.transform.position.x, 0, PlayerTransform.position.z - gameObject.transform.position.z).normalized * Time.deltaTime;
-            transform.parent.position -= PullMovement * MagnetSpeed * 0.01f;
+            transform.position -= PullMovement * MagnetSpeed * 0.01f;
         }
             
     }
