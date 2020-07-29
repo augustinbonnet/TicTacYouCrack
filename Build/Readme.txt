@@ -1,0 +1,1 @@
+Please be sure to lower the windows volume to 5% before launching the game.
